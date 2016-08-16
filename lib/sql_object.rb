@@ -1,8 +1,5 @@
 require_relative 'db_connection'
 require 'active_support/inflector'
-require 'byebug'
-# NB: the attr_accessor we wrote in phase 0 is NOT used in the rest
-# of this project. It was only a warm up.
 
 class SQLObject
 
@@ -15,7 +12,6 @@ class SQLObject
           '#{table_name}'
       SQL
     end
-    # debugger
 
     @columns ||= cols.first.map(&:to_sym)
   end
@@ -24,11 +20,9 @@ class SQLObject
     columns.each do |col|
       define_method(col) do
         attributes[col]
-        # self.name
       end
 
       define_method("#{col}=") do |val|
-        # debugger
         attributes[col] = val
       end
     end
@@ -36,7 +30,6 @@ class SQLObject
 
   def self.table_name=(table_name)
     @table_name = table_name
-    # debugger
   end
 
   def self.table_name
@@ -49,18 +42,12 @@ class SQLObject
         #{table_name}.*
       FROM
         #{table_name}
-      SQL
-      # debugger
-
-      # better = rows.each { |row| row.each do |col, val| { col = col.to_sym } }
+    SQL
 
     self.parse_all(rows)
-
   end
 
   def self.parse_all(results)
-
-
     results.map { |row| self.new(Hash[row.map{|k,v|[k.to_sym, v]}]) }
   end
 
@@ -72,7 +59,7 @@ class SQLObject
         #{table_name}
       WHERE
         id = ?
-      SQL
+    SQL
 
     self.parse_all(rows).first
   end
@@ -87,25 +74,16 @@ class SQLObject
 
   def attributes
     @attributes ||= {}
-    # debugger
-    # # syms = self.class.columns
-    # # vars = syms.map { |col| col = "@#{col}" }
-    # #
-    # # # debugger
-    # # (0...syms.length).each { |idx| @attributes[syms[idx]] = vars[idx] }
-    # @attributes
   end
 
   def attribute_values
     self.class.columns.map { |col| self.send(col) }
-
   end
 
   def insert
     col_names = self.class.columns
     joined_col_names = col_names.join(',')
     question_marks = (["?"] * col_names.length).join(',')
-    # debugger
 
     DBConnection.execute(<<-SQL, *attribute_values)
       INSERT INTO
