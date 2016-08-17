@@ -50,10 +50,7 @@ module Associatable
       options = self.class.assoc_options[name]
 
       key_val = self.send(options.foreign_key)
-      options
-        .model_class
-        .where(options.primary_key => key_val)
-        .first
+      options.model_class.where(options.primary_key => key_val).first
     end
   end
 
@@ -65,9 +62,7 @@ module Associatable
       options = self.class.assoc_options[name]
 
       key_val = self.send(options.primary_key)
-      options
-        .model_class
-        .where(options.foreign_key => key_val)
+      options.model_class.where(options.foreign_key => key_val)
     end
   end
 
@@ -78,8 +73,7 @@ module Associatable
   def has_one_through(name, through_name, source_name)
     define_method(name) do
       through_options = self.class.assoc_options[through_name]
-      source_options =
-        through_options.model_class.assoc_options[source_name]
+      source_options = through_options.model_class.assoc_options[source_name]
 
       through_table = through_options.table_name
       through_pk = through_options.primary_key
