@@ -1,6 +1,6 @@
-#hide_and_sql
+# hide_and_sql
 
-##Summary
+## Summary
 
 hide_and_sql is a lightweight Object Relational Mapping (ORM) tool.
 
@@ -9,7 +9,7 @@ using Ruby class objects to represent tables in the database. These classes
 provide a user-friendly interface to manipulate data and define relationships
 between different tables.
 
-##Setup
+## Setup
 
 - Download or clone hide_and_sql into your working folder
 - Change the following paths in lib/db_connection.rb to point to your database
@@ -26,30 +26,36 @@ classes (or use the ::table_name= method to set the name manually)
 - Call the ::finalize! method at the end of your class definitions to create
 getter and setter methods
 
-##Example
+## Example
 
+```ruby
 class House < SQLObject
   has_many :voters
   has_many :votes, through: :voters
 
   finalize!
 end
+```
 
+```ruby
 class Voter < SQLObject
   belongs to :house
   has_many :votes
 
   finalize!
 end
+```
 
+```ruby
 class Vote < SQLObject
   belongs_to :voter
   has_one :house, through: :voter
 end
+```
 
-##API
+## API
 
-###Class Methods
+### Class Methods
 
 - `::columns` Returns all table columns
 - `::finalize!` Creates getter and setter methods for each column
@@ -58,14 +64,14 @@ end
 - `::all` Returns all rows from table
 - `::find(id)` Returns row with given id
 
-###Instance Methods
+### Instance Methods
 
 - `#attributes` Returns row's values
 - `#insert` Inserts object into new row in table
 - `#update` Edits values of the object in the table
 - `#save` Calls `#update` when object has id, `#save` when it doesn't
 
-###Associations
+### Associations
 
 - `belongs_to`
 - `has_many`
